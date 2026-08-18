@@ -1,13 +1,16 @@
+/* ============================================
+   CONFIG
+   ============================================ */
 const CONFIG = {
   brandName: "A&M Software",
   whatsappNumber: "905XXXXXXXXX",
   email: "hello@example.com",
 
-  githubAli: "#",
-  githubMahsun: "#",
+  githubAli: "https://github.com/aliasttt",
+  githubMahsun: "",
 
-  linkedinAli: "#",
-  linkedinMahsun: "#",
+  linkedinAli: "https://linkedin.com/in/aliasttt",
+  linkedinMahsun: "https://www.linkedin.com/in/nosratie",
 
   gtManagerId: "GTM-XXXXXXX",
 
@@ -16,6 +19,42 @@ const CONFIG = {
   defaultLanguage: "tr"
 };
 
+/* ============================================
+   VIDEO CONFIGURATION
+   ============================================ */
+const PROJECT_VIDEOS = [
+  {
+    src: "assets/videos/project-1.mp4",
+    poster: "",
+    titleTR: "Web Projesi",
+    titleEN: "Web Project",
+    typeTR: "Web Platformu",
+    typeEN: "Web Platform"
+  },
+  {
+    src: "assets/videos/project-2.mp4",
+    poster: "",
+    titleTR: "Mobil Uygulama",
+    titleEN: "Mobile Application",
+    typeTR: "Mobil Ürün",
+    typeEN: "Mobile Product"
+  }
+];
+
+/* ============================================
+   SVG ICONS (inline, no external deps)
+   ============================================ */
+const SVG_ICONS = {
+  github: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>',
+  linkedin: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>',
+  play: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>',
+  arrowLeft: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>',
+  arrowRight: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>'
+};
+
+/* ============================================
+   TRANSLATIONS (existing + new video section)
+   ============================================ */
 const translations = {
   tr: {
     documentTitle: "A&M Software | Web, Mobil, Backend ve Yapay Zeka Yazılım Geliştirme",
@@ -40,6 +79,9 @@ const translations = {
     servicesTitle: "Ürününüzü tasarlamak, geliştirmek ve çalıştırmak için gereken çekirdek ekip.",
     projectsEyebrow: "Seçili işler",
     projectsTitle: "Gercek projeler. Gercek sistemler.",
+    videoEyebrow: "Projelerden Görüntüler",
+    videoTitle: "Sadece anlatmıyoruz. Çalışan ürünleri gösteriyoruz.",
+    videoText: "Geliştirdiğimiz web ve mobil ürünlerden gerçek kullanım görüntüleri.",
     whyEyebrow: "Neden biz?",
     whyTitle: "Küçük ekip hızıyla senior mühendislik disiplini.",
     teamEyebrow: "Ekibimiz",
@@ -152,6 +194,9 @@ const translations = {
     servicesTitle: "The core engineering team to design, build and run your product.",
     projectsEyebrow: "Selected work",
     projectsTitle: "Real projects. Real systems.",
+    videoEyebrow: "PRODUCT SHOWCASE",
+    videoTitle: "Don't just take our word for it. See the products in action.",
+    videoText: "Real product footage from web and mobile systems we've built.",
     whyEyebrow: "Why work with us?",
     whyTitle: "Senior engineering discipline with the speed of a small team.",
     teamEyebrow: "Team",
@@ -243,8 +288,14 @@ const translations = {
   }
 };
 
+/* ============================================
+   STATE
+   ============================================ */
 let currentLanguage = CONFIG.defaultLanguage;
 
+/* ============================================
+   ANALYTICS HELPERS
+   ============================================ */
 function trackEvent(eventName, parameters = {}) {
   window.dataLayer = window.dataLayer || [];
   window.dataLayer.push({
@@ -276,6 +327,9 @@ function storeAttribution() {
   }
 }
 
+/* ============================================
+   ICON HELPERS
+   ============================================ */
 function iconSvg(index) {
   const icons = [
     '<path d="M5 12h14M12 5v14"/><path d="M4 4h16v16H4z"/>',
@@ -288,17 +342,18 @@ function iconSvg(index) {
   return `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${icons[index % icons.length]}</svg>`;
 }
 
+/* ============================================
+   TEXT / CONTENT RENDERING
+   ============================================ */
 function setTextContent(dictionary) {
   document.querySelectorAll("[data-i18n]").forEach((element) => {
     const key = element.dataset.i18n;
     if (dictionary[key]) element.textContent = dictionary[key];
   });
-
   document.querySelectorAll("[data-i18n-alt]").forEach((element) => {
     const key = element.dataset.i18nAlt;
     if (dictionary[key]) element.alt = dictionary[key];
   });
-
   document.querySelectorAll("[data-brand]").forEach((element) => {
     element.textContent = CONFIG.brandName;
   });
@@ -371,6 +426,63 @@ function renderLists(dictionary) {
   `).join("");
 }
 
+/* ============================================
+   SOCIAL LINKS
+   ============================================ */
+function renderSocialLinks(dictionary) {
+  const aliLinks = document.querySelector("[data-social-container='ali']");
+  const mahsunLinks = document.querySelector("[data-social-container='mahsun']");
+
+  if (aliLinks) {
+    let html = "";
+    if (CONFIG.linkedinAli && CONFIG.linkedinAli !== "#") {
+      html += `<a href="${CONFIG.linkedinAli}" target="_blank" rel="noopener noreferrer" data-social="linkedinAli" data-tracking-social="linkedin" data-tracking-member="ali" aria-label="Ali LinkedIn">
+        ${SVG_ICONS.linkedin}<span>LinkedIn</span>
+      </a>`;
+    }
+    if (CONFIG.githubAli && CONFIG.githubAli !== "#") {
+      html += `<a href="${CONFIG.githubAli}" target="_blank" rel="noopener noreferrer" data-social="githubAli" data-tracking-social="github" data-tracking-member="ali" aria-label="Ali GitHub">
+        ${SVG_ICONS.github}<span>GitHub</span>
+      </a>`;
+    }
+    aliLinks.innerHTML = html;
+    bindSocialTracking(aliLinks);
+  }
+
+  if (mahsunLinks) {
+    let html = "";
+    if (CONFIG.linkedinMahsun && CONFIG.linkedinMahsun !== "#") {
+      html += `<a href="${CONFIG.linkedinMahsun}" target="_blank" rel="noopener noreferrer" data-social="linkedinMahsun" data-tracking-social="linkedin" data-tracking-member="mahsun" aria-label="Mahsun LinkedIn">
+        ${SVG_ICONS.linkedin}<span>LinkedIn</span>
+      </a>`;
+    }
+    if (CONFIG.githubMahsun && CONFIG.githubMahsun !== "#") {
+      html += `<a href="${CONFIG.githubMahsun}" target="_blank" rel="noopener noreferrer" data-social="githubMahsun" data-tracking-social="github" data-tracking-member="mahsun" aria-label="Mahsun GitHub">
+        ${SVG_ICONS.github}<span>GitHub</span>
+      </a>`;
+    }
+    mahsunLinks.innerHTML = html;
+    bindSocialTracking(mahsunLinks);
+  }
+}
+
+function bindSocialTracking(container) {
+  container.querySelectorAll("[data-tracking-social]").forEach((link) => {
+    link.addEventListener("click", () => {
+      const platform = link.dataset.trackingSocial;
+      const member = link.dataset.trackingMember;
+      trackEvent("social_click", {
+        platform: platform,
+        member: member,
+        location: "team"
+      });
+    });
+  });
+}
+
+/* ============================================
+   LINKS UPDATE
+   ============================================ */
 function updateLinks(dictionary) {
   const whatsappUrl = `https://wa.me/${CONFIG.whatsappNumber}?text=${encodeURIComponent(dictionary.whatsappMessage)}`;
   document.querySelectorAll("[data-whatsapp]").forEach((link) => {
@@ -391,16 +503,26 @@ function updateLinks(dictionary) {
     };
   });
 
-  document.querySelectorAll("[data-social]").forEach((link) => {
-    const value = CONFIG[link.dataset.social] || "#";
-    link.href = value;
-    if (value !== "#") {
+  // Footer social links
+  document.querySelectorAll(".footer-links [data-social]").forEach((link) => {
+    const socialKey = link.dataset.social;
+    const url = CONFIG[socialKey] || "#";
+    link.href = url;
+    if (url && url !== "#") {
       link.target = "_blank";
-      link.rel = "noopener";
+      link.rel = "noopener noreferrer";
+      link.onclick = () => {
+        const platform = socialKey.includes("linkedin") ? "linkedin" : "github";
+        const member = socialKey.includes("Ali") || socialKey.includes("ali") ? "ali" : "mahsun";
+        trackEvent("social_click", { platform, member, location: "footer" });
+      };
     }
   });
 }
 
+/* ============================================
+   SEO
+   ============================================ */
 function updateSeo(dictionary) {
   document.documentElement.lang = currentLanguage;
   document.title = dictionary.documentTitle;
@@ -416,14 +538,19 @@ function updateSeo(dictionary) {
   if (twitterDescription) twitterDescription.setAttribute("content", dictionary.metaDescription);
 }
 
+/* ============================================
+   LANGUAGE SWITCH
+   ============================================ */
 function setLanguage(language, shouldTrack = true) {
   currentLanguage = translations[language] ? language : CONFIG.defaultLanguage;
   const dictionary = translations[currentLanguage];
   localStorage.setItem("preferred_language", currentLanguage);
   setTextContent(dictionary);
   renderLists(dictionary);
+  renderSocialLinks(dictionary);
   updateLinks(dictionary);
   updateSeo(dictionary);
+  renderVideoSection(dictionary);
   bindFaq();
   bindProjectTracking();
   observeReveals();
@@ -449,6 +576,9 @@ function getInitialLanguage() {
   return CONFIG.defaultLanguage;
 }
 
+/* ============================================
+   NAVIGATION
+   ============================================ */
 function bindNavigation() {
   const header = document.querySelector("[data-header]");
   const menu = document.querySelector("[data-menu]");
@@ -480,6 +610,9 @@ function bindNavigation() {
   });
 }
 
+/* ============================================
+   FAQ
+   ============================================ */
 function bindFaq() {
   document.querySelectorAll(".faq-button").forEach((button) => {
     button.addEventListener("click", () => {
@@ -491,6 +624,9 @@ function bindFaq() {
   });
 }
 
+/* ============================================
+   PROJECT TRACKING
+   ============================================ */
 function bindProjectTracking() {
   document.querySelectorAll("[data-project-card]").forEach((card) => {
     card.addEventListener("click", () => {
@@ -500,6 +636,9 @@ function bindProjectTracking() {
   });
 }
 
+/* ============================================
+   REVEAL OBSERVER
+   ============================================ */
 let revealObserver;
 function observeReveals() {
   const elements = document.querySelectorAll(".reveal");
@@ -507,7 +646,6 @@ function observeReveals() {
     elements.forEach((element) => element.classList.add("is-visible"));
     return;
   }
-
   if (revealObserver) revealObserver.disconnect();
   revealObserver = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
@@ -517,10 +655,298 @@ function observeReveals() {
       }
     });
   }, { threshold: 0.12 });
-
   elements.forEach((element) => revealObserver.observe(element));
 }
 
+/* ============================================
+   VIDEO CAROUSEL
+   ============================================ */
+function renderVideoSection(dictionary) {
+  const container = document.getElementById("videoCarousel");
+  if (!container) return;
+
+  const slides = PROJECT_VIDEOS.map((video, index) => {
+    const videoTitle = currentLanguage === "tr" ? video.titleTR : video.titleEN;
+    const videoType = currentLanguage === "tr" ? video.typeTR : video.typeEN;
+
+    return `
+      <div class="carousel-slide" role="group" aria-roledescription="slide" aria-label="${videoTitle}" aria-hidden="${index !== 0}" data-slide-index="${index}">
+        <div class="video-frame">
+          <div class="video-frame-header">
+            <div class="video-frame-dots"><span></span><span></span><span></span></div>
+            <span class="video-frame-label">${videoTitle}</span>
+          </div>
+          <div class="video-frame-body" data-video-container="${index}">
+            <video
+              preload="metadata"
+              muted
+              playsinline
+              loop
+              data-video-index="${index}"
+              ${video.poster ? `poster="${video.poster}"` : ""}
+            >
+              <source src="${video.src}" type="video/mp4">
+            </video>
+            <div class="video-fallback" data-video-fallback="${index}">
+              <div class="video-fallback-icon">${SVG_ICONS.play}</div>
+              <span>Project video</span>
+              <code>${video.src}</code>
+            </div>
+          </div>
+        </div>
+        <div class="video-info">
+          <h3>${videoTitle}</h3>
+          <p>${videoType}</p>
+        </div>
+      </div>
+    `;
+  }).join("");
+
+  container.innerHTML = `
+    <div class="carousel" role="region" aria-roledescription="carousel" aria-label="Project videos" data-carousel>
+      <div class="carousel-viewport" data-carousel-viewport>
+        <div class="carousel-track" data-carousel-track>
+          ${slides}
+        </div>
+      </div>
+      <div class="carousel-controls">
+        <button class="carousel-arrow carousel-prev" type="button" aria-label="Previous slide" data-carousel-prev disabled>
+          ${SVG_ICONS.arrowLeft}
+        </button>
+        <div class="carousel-dots" data-carousel-dots>
+          ${PROJECT_VIDEOS.map((_, i) => `<button class="carousel-dot${i === 0 ? " is-active" : ""}" type="button" aria-label="Go to slide ${i + 1}" data-carousel-dot="${i}"></button>`).join("")}
+        </div>
+        <button class="carousel-arrow carousel-next" type="button" aria-label="Next slide" data-carousel-next>
+          ${SVG_ICONS.arrowRight}
+        </button>
+      </div>
+    </div>
+  `;
+
+  initCarousel();
+}
+
+/* ============================================
+   VIDEO FALLBACK HANDLING
+   ============================================ */
+function initVideoFallbacks() {
+  document.querySelectorAll("video[data-video-index]").forEach((video) => {
+    const index = video.dataset.videoIndex;
+    const fallback = document.querySelector(`[data-video-fallback="${index}"]`);
+    if (!fallback) return;
+
+    video.addEventListener("loadeddata", () => {
+      fallback.style.display = "none";
+      video.style.display = "block";
+    });
+
+    video.addEventListener("error", () => {
+      fallback.style.display = "flex";
+      video.style.display = "none";
+    });
+
+    // Initial state: hide video, show fallback
+    video.style.display = "none";
+    fallback.style.display = "flex";
+
+    // Try to load metadata to check if video exists
+    video.load();
+  });
+}
+
+/* ============================================
+   CAROUSEL ENGINE
+   ============================================ */
+function initCarousel() {
+  const carousel = document.querySelector("[data-carousel]");
+  if (!carousel) return;
+
+  const track = carousel.querySelector("[data-carousel-track]");
+  const viewport = carousel.querySelector("[data-carousel-viewport]");
+  const prevBtn = carousel.querySelector("[data-carousel-prev]");
+  const nextBtn = carousel.querySelector("[data-carousel-next]");
+  const dotsContainer = carousel.querySelector("[data-carousel-dots]");
+
+  const slides = track.querySelectorAll(".carousel-slide");
+  const totalSlides = slides.length;
+  let currentIndex = 0;
+  let autoplayTimer = null;
+  let touchStartX = 0;
+  let touchCurrentX = 0;
+  let isDragging = false;
+
+  // Handle video source errors gracefully
+  initVideoFallbacks();
+
+  function goToSlide(index, shouldAutoplay = true) {
+    if (index < 0 || index >= totalSlides) return;
+
+    // Pause all videos
+    pauseAllVideos();
+
+    // Update track
+    track.style.transform = `translateX(-${index * 100}%)`;
+    currentIndex = index;
+
+    // Update aria-hidden
+    slides.forEach((slide, i) => {
+      slide.setAttribute("aria-hidden", String(i !== index));
+    });
+
+    // Update dots
+    dotsContainer.querySelectorAll(".carousel-dot").forEach((dot, i) => {
+      dot.classList.toggle("is-active", i === index);
+    });
+
+    // Update buttons
+    prevBtn.disabled = index === 0;
+    nextBtn.disabled = index === totalSlides - 1;
+
+    // Try to play the current video
+    if (shouldAutoplay) {
+      tryPlayCurrentVideo();
+    }
+
+    // Analytics
+    trackEvent("video_slide_change", {
+      slide: index + 1,
+      total: totalSlides
+    });
+  }
+
+  function pauseAllVideos() {
+    track.querySelectorAll("video[data-video-index]").forEach((video) => {
+      if (!video.paused) {
+        video.pause();
+      }
+    });
+  }
+
+  function tryPlayCurrentVideo() {
+    const currentSlide = slides[currentIndex];
+    const video = currentSlide.querySelector("video[data-video-index]");
+    if (!video || video.style.display === "none") return;
+
+    // Only autoplay if browser allows it and reduced motion is not preferred
+    if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      const playPromise = video.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(() => {
+          // Autoplay was prevented, which is fine
+        });
+      }
+    }
+  }
+
+  function onVideoPlay() {
+    const video = event?.target;
+    if (video) {
+      const index = video.dataset.videoIndex;
+      trackEvent("video_play", { video: `project-${parseInt(index) + 1}` });
+    }
+  }
+
+  function onVideoPause() {
+    const video = event?.target;
+    if (video) {
+      const index = video.dataset.videoIndex;
+      trackEvent("video_pause", { video: `project-${parseInt(index) + 1}` });
+    }
+  }
+
+  function onVideoEnded() {
+    const video = event?.target;
+    if (video) {
+      const index = video.dataset.videoIndex;
+      trackEvent("video_complete", { video: `project-${parseInt(index) + 1}` });
+    }
+  }
+
+  // Bind video events
+  track.querySelectorAll("video[data-video-index]").forEach((video) => {
+    video.addEventListener("play", onVideoPlay);
+    video.addEventListener("pause", onVideoPause);
+    video.addEventListener("ended", onVideoEnded);
+  });
+
+  // Prev / Next
+  prevBtn.addEventListener("click", () => goToSlide(currentIndex - 1));
+  nextBtn.addEventListener("click", () => goToSlide(currentIndex + 1));
+
+  // Dots
+  dotsContainer.querySelectorAll("[data-carousel-dot]").forEach((dot) => {
+    dot.addEventListener("click", () => {
+      goToSlide(parseInt(dot.dataset.carouselDot));
+    });
+  });
+
+  // Keyboard
+  carousel.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowLeft") {
+      e.preventDefault();
+      goToSlide(currentIndex - 1);
+    } else if (e.key === "ArrowRight") {
+      e.preventDefault();
+      goToSlide(currentIndex + 1);
+    }
+  });
+
+  // Touch / Swipe
+  viewport.addEventListener("touchstart", (e) => {
+    touchStartX = e.touches[0].clientX;
+    isDragging = true;
+    track.classList.add("is-dragging");
+  }, { passive: true });
+
+  viewport.addEventListener("touchmove", (e) => {
+    if (!isDragging) return;
+    touchCurrentX = e.touches[0].clientX;
+    const diff = touchCurrentX - touchStartX;
+    const offset = -(currentIndex * 100) + (diff / viewport.offsetWidth * 100);
+    track.style.transform = `translateX(${offset}%)`;
+  }, { passive: true });
+
+  viewport.addEventListener("touchend", () => {
+    if (!isDragging) return;
+    isDragging = false;
+    track.classList.remove("is-dragging");
+
+    const diff = touchCurrentX - touchStartX;
+    const threshold = viewport.offsetWidth * 0.2;
+
+    if (Math.abs(diff) > threshold) {
+      if (diff < 0 && currentIndex < totalSlides - 1) {
+        goToSlide(currentIndex + 1);
+      } else if (diff > 0 && currentIndex > 0) {
+        goToSlide(currentIndex - 1);
+      } else {
+        goToSlide(currentIndex);
+      }
+    } else {
+      goToSlide(currentIndex);
+    }
+  });
+
+  // Viewport intersection for autoplay
+  const viewportObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        tryPlayCurrentVideo();
+      } else {
+        pauseAllVideos();
+      }
+    });
+  }, { threshold: 0.3 });
+
+  viewportObserver.observe(viewport);
+
+  // Init first slide
+  goToSlide(0, false);
+}
+
+/* ============================================
+   CONSENT
+   ============================================ */
 function initConsent() {
   const consent = document.querySelector("[data-consent]");
   if (!CONFIG.consentEnabled || !consent) return;
@@ -540,6 +966,9 @@ function initConsent() {
   });
 }
 
+/* ============================================
+   CTA TRACKING
+   ============================================ */
 function bindCtaTracking() {
   document.querySelectorAll("[data-whatsapp], [data-email]").forEach((link) => {
     link.addEventListener("click", () => {
@@ -550,9 +979,14 @@ function bindCtaTracking() {
   });
 }
 
+/* ============================================
+   STRUCTURED DATA
+   ============================================ */
 function updateStructuredData() {
   const node = document.getElementById("structured-data");
   if (!node) return;
+  const sameAs = [CONFIG.githubAli, CONFIG.linkedinAli, CONFIG.githubMahsun, CONFIG.linkedinMahsun]
+    .filter((url) => url && url !== "#" && url !== "");
   node.textContent = JSON.stringify({
     "@context": "https://schema.org",
     "@type": "ProfessionalService",
@@ -560,10 +994,13 @@ function updateStructuredData() {
     url: "https://example.com/",
     description: translations.en.metaDescription,
     email: CONFIG.email,
-    sameAs: [CONFIG.githubAli, CONFIG.linkedinAli, CONFIG.githubMahsun, CONFIG.linkedinMahsun].filter((url) => url && url !== "#")
+    sameAs
   });
 }
 
+/* ============================================
+   INIT
+   ============================================ */
 document.addEventListener("DOMContentLoaded", () => {
   storeAttribution();
   document.getElementById("year").textContent = new Date().getFullYear();

@@ -72,7 +72,7 @@
 
   <main id="main">
     <section class="hero section" id="top">
-      <div class="hero-bg" aria-hidden="true"></div>
+
       <div class="container hero-grid">
         <div class="hero-copy reveal">
           <p class="eyebrow" data-i18n="heroEyebrow">Iki muhendis. Tek eksiksiz gelistirme ekibi.</p>
@@ -123,13 +123,24 @@
       </div>
     </section>
 
-    <section class="section section-muted" id="projects">
+    <section class="section" id="projects">
       <div class="container">
         <div class="section-heading reveal">
           <p class="eyebrow" data-i18n="projectsEyebrow">Secili isler</p>
           <h2 data-i18n="projectsTitle">Gercek projeler. Gercek sistemler.</h2>
         </div>
         <div class="projects-grid" id="projectsGrid"></div>
+      </div>
+    </section>
+
+    <section class="section" id="video-showcase">
+      <div class="container">
+        <div class="section-heading reveal">
+          <p class="eyebrow" data-i18n="videoEyebrow">Projelerden Görüntüler</p>
+          <h2 data-i18n="videoTitle">Sadece anlatmıyoruz. Çalışan ürünleri gösteriyoruz.</h2>
+          <p data-i18n="videoText" style="margin-top:14px;max-width:680px;">Geliştirdiğimiz web ve mobil ürünlerden gerçek kullanım görüntüleri.</p>
+        </div>
+        <div id="videoCarousel"></div>
       </div>
     </section>
 
@@ -143,7 +154,7 @@
       </div>
     </section>
 
-    <section class="section section-muted" id="team">
+    <section class="section" id="team">
       <div class="container">
         <div class="section-heading centered reveal">
           <p class="eyebrow" data-i18n="teamEyebrow">Ekibimiz</p>
@@ -163,10 +174,7 @@
               <div class="chips">
                 <span>Python</span><span>Django</span><span>PostgreSQL</span><span>Docker</span><span>LLM</span>
               </div>
-              <div class="profile-links">
-                <a href="#" data-social="githubAli" aria-label="Ali GitHub">GitHub</a>
-                <a href="#" data-social="linkedinAli" aria-label="Ali LinkedIn">LinkedIn</a>
-              </div>
+              <div class="profile-links" data-social-container="ali"></div>
             </div>
           </article>
 
@@ -191,10 +199,7 @@
               <div class="chips">
                 <span>React Native</span><span>React</span><span>Next.js</span><span>TypeScript</span><span>CI/CD</span>
               </div>
-              <div class="profile-links">
-                <a href="#" data-social="githubMahsun" aria-label="Mahsun GitHub">GitHub</a>
-                <a href="#" data-social="linkedinMahsun" aria-label="Mahsun LinkedIn">LinkedIn</a>
-              </div>
+              <div class="profile-links" data-social-container="mahsun"></div>
             </div>
           </article>
         </div>
@@ -211,7 +216,7 @@
       </div>
     </section>
 
-    <section class="section section-muted" id="technology">
+    <section class="section" id="technology">
       <div class="container">
         <div class="section-heading reveal">
           <p class="eyebrow" data-i18n="techEyebrow">Teknolojiler</p>
