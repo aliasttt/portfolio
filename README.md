@@ -1,6 +1,6 @@
-# A&M Software Landing Page
+# A&M Software — Beylikdüzü Landing Page
 
-Static one-page landing website for a two-person software engineering team. It uses only HTML, CSS and vanilla JavaScript, with no build step.
+Conversion-focused, Turkish-first landing page for `beylikduzuyazilim.com.tr`. It uses HTML, CSS, and vanilla JavaScript with no build step or runtime dependencies.
 
 ## Running Locally
 
@@ -14,6 +14,16 @@ python -m http.server 8000
 
 Then open `http://localhost:8000`.
 
+## Focused browser validation
+
+With the Playwright Python package and Chromium installed:
+
+```text
+python tests/browser_smoke.py
+```
+
+The smoke test covers 360 px, 768 px, and 1440 px layouts; no-JavaScript contact links; TR/EN switching; local image loading; safe outbound links; analytics-disabled network behavior; consent gating; event duplication; and withdrawal.
+
 ## GitHub Pages Deployment
 
 In your GitHub repository:
@@ -22,70 +32,21 @@ In your GitHub repository:
 Repository -> Settings -> Pages -> Deploy from branch -> main -> /root
 ```
 
-## Profile Images
+## Deployment
 
-Replace these files with optimized WebP portrait images:
+GitHub Pages is configured manually from the `main` branch and repository root. Feature branches do not represent a production deployment. Review and merge deliberately; do not enable a separate production workflow for a feature branch.
+
+## Content and assets
+
+Team images live in:
 
 ```text
 assets/ali.webp
 assets/mahsun.webp
 ```
 
-The layout is already configured for portrait photos with `object-fit: cover`.
+Portfolio screenshots in `assets/projects/` are optimized captures of the confirmed public project pages. Project descriptions describe the public products and do not claim responsibility for individual features or results.
 
-## Contact Details
+## Analytics
 
-Edit the `CONFIG` object at the top of `script.js`:
-
-```javascript
-const CONFIG = {
-  brandName: "A&M Software",
-  whatsappNumber: "905XXXXXXXXX",
-  email: "hello@example.com"
-};
-```
-
-All WhatsApp, email, GitHub and LinkedIn links are generated from this configuration.
-
-## Google Tag Manager
-
-Replace every `GTM-XXXXXXX` placeholder in `index.html` with the real GTM container ID.
-
-Configure analytics through Google Tag Manager:
-
-1. Add the GTM container ID.
-2. Configure GA4 inside Google Tag Manager.
-3. Configure Google Ads Conversion Tracking inside GTM.
-4. Create triggers from the custom `dataLayer` events.
-
-Tracked events include:
-
-```text
-generate_lead
-whatsapp_click
-email_click
-phone_click
-project_cta_click
-portfolio_click
-language_change
-```
-
-UTM parameters and `gclid` are stored in `sessionStorage` and included with conversion events when available.
-
-The consent banner is available but disabled by default. Set `consentEnabled: true` in `script.js` when you are ready to connect consent behavior to your GTM setup.
-
-## Custom Domain
-
-When moving from the placeholder domain, update:
-
-```text
-index.html canonical URL
-Open Graph URL and image URL
-sitemap.xml
-robots.txt sitemap URL
-CNAME, if GitHub Pages uses a custom domain
-```
-
-## Contact Form
-
-No fake form submission is enabled. If a form is needed later, configure `contactFormEndpoint` in `script.js` and connect a real endpoint such as Formspree, Web3Forms or a custom backend.
+Analytics is intentionally disabled. Future IDs belong only in `analytics-config.js`; do not add placeholder IDs or direct Google tags. See [`docs/analytics-setup.md`](docs/analytics-setup.md) for the event contract, consent boundary, phase 2 requirements, and verification checklist.
