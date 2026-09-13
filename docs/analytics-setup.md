@@ -31,6 +31,7 @@ Events are pushed only after a visitor grants analytics consent. Parameters use 
 | `portfolio_click` | `project_id`; `language` | The visitor deliberately opened a portfolio link. |
 | `service_interest` | `service_id`: `web`, `mobile`, or `custom_software`; `language` | The visitor clicked a service-specific enquiry action. |
 | `language_change` | `from_language`; `language` | The visitor deliberately changed the site language. |
+| `video_engagement` | `video_id`; `action`: `play`; `language` | The visitor deliberately started one of the illustrative videos for the first time during the page view. |
 
 The website sends each event through `dataLayer.push()` only. Do not also send the same action directly with `gtag('event', ...)`.
 

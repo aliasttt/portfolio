@@ -50,15 +50,37 @@ const copy = {
     project3a: "Mücevher koleksiyonlarını ve ürün keşfini öne çıkaran çevrim içi mağaza deneyimi.",
     projectBonus: "QR menü ve sadakat puanlarını işletme paneli ve müşteri deneyimiyle bir araya getiren platform.",
     projectPreis: "Dijital menü, çevrim içi sipariş ve çok dilli menü yönetimi sunan restoran platformu.",
+    imageFallback: "Proje görseli yüklenemedi",
     zamokLinkAria: "Zamok BIM canlı sitesini yeni sekmede aç",
     firmenLinkAria: "Firmen Logo Druck canlı sitesini yeni sekmede aç",
     bonusLinkAria: "MyBonus Berlin canlı sitesini yeni sekmede aç",
     preisLinkAria: "PreisMenu canlı sitesini yeni sekmede aç",
+    threeALinkAria: "3A Jewellery canlı sitesini yeni sekmede aç",
     zamokAlt: "Zamok BIM web sitesi ana sayfası",
     firmenAlt: "Firmen Logo Druck e-ticaret sitesi ana sayfası",
     bonusAlt: "MyBonus Berlin web sitesi ana sayfası",
     preisAlt: "PreisMenu web sitesi ana sayfası",
+    threeAAlt: "3A Jewellery web sitesi ana sayfası",
     visitProject: "Canlı siteyi aç",
+    mediaEyebrow: "Dijital deneyimler",
+    mediaTitle: "Web ve mobil dünyasına bir bakış.",
+    mediaIntro: "Fikirlerin ekranda çalışan, anlaşılır deneyimlere dönüşmesini önemsiyoruz.",
+    mediaPlay: "Videoyu oynat",
+    mediaLoading: "Video yükleniyor",
+    mediaErrorTitle: "Video şu anda oynatılamıyor.",
+    mediaErrorText: "Tanıtım görselini incelemeye devam edebilirsiniz.",
+    mediaBadge: "Temsili görüntü",
+    mediaWebType: "Web ve arayüz",
+    mediaWebTitle: "Arayüzden çalışan ürüne",
+    mediaWebText: "Web deneyimlerinin arkasındaki tasarım ve geliştirme sürecine kısa bir bakış.",
+    mediaWebAlt: "Bilgisayar ekranında yazılım arayüzü",
+    mediaWebVideoAria: "Web arayüzü temsili tanıtım videosu",
+    mediaMobileType: "Mobil ve yazılım",
+    mediaMobileTitle: "Her ekranda kullanılabilir deneyim",
+    mediaMobileText: "Mobil ürünlerin gerçek kullanım ortamına uyum sağlayan sade ve erişilebilir arayüzleri.",
+    mediaMobileAlt: "Telefon kullanan bir yazılım geliştirici",
+    mediaMobileVideoAria: "Mobil geliştirme temsili tanıtım videosu",
+    mediaDisclosure: "Bu videolar teslim ettiğimiz projelerin kaydı değil, çalışma alanlarımızı anlatan lisanslı temsili görüntülerdir.",
     servicesEyebrow: "Hizmetler",
     servicesTitle: "İhtiyacınıza uygun, anlaşılır bir kapsam.",
     servicesIntro: "Teknik ayrıntıyı sadeleştirir, iş hedefinize uygun çözümü birlikte belirleriz.",
@@ -98,6 +120,8 @@ const copy = {
     finalText: "Kapsamı birlikte netleştirelim ve projenize uygun bir teklif hazırlayalım.",
     finalWhatsapp: "WhatsApp'tan Teklif Al",
     footerText: "Web sitesi, mobil uygulama ve özel yazılım geliştirme.",
+    footerWhatsapp: "WhatsApp",
+    footerEmail: "E-posta",
     stickyWhatsapp: "WhatsApp",
     stickyPhone: "Ara",
     mobileContactAria: "Hızlı iletişim",
@@ -153,15 +177,37 @@ const copy = {
     project3a: "An online store experience focused on jewellery collections and product discovery.",
     projectBonus: "A platform combining QR menus and loyalty points with a business dashboard and customer experience.",
     projectPreis: "A restaurant platform for digital menus, online ordering and multilingual menu management.",
+    imageFallback: "Project image could not be loaded",
     zamokLinkAria: "Open the live Zamok BIM site in a new tab",
     firmenLinkAria: "Open the live Firmen Logo Druck site in a new tab",
     bonusLinkAria: "Open the live MyBonus Berlin site in a new tab",
     preisLinkAria: "Open the live PreisMenu site in a new tab",
+    threeALinkAria: "Open the live 3A Jewellery site in a new tab",
     zamokAlt: "Zamok BIM website homepage",
     firmenAlt: "Firmen Logo Druck e-commerce homepage",
     bonusAlt: "MyBonus Berlin website homepage",
     preisAlt: "PreisMenu website homepage",
+    threeAAlt: "3A Jewellery website homepage",
     visitProject: "Open live site",
+    mediaEyebrow: "Digital experiences",
+    mediaTitle: "A look at web and mobile experiences.",
+    mediaIntro: "We care about turning ideas into clear experiences that work on screen.",
+    mediaPlay: "Play video",
+    mediaLoading: "Loading video",
+    mediaErrorTitle: "The video cannot be played right now.",
+    mediaErrorText: "You can continue viewing the promotional image.",
+    mediaBadge: "Illustrative footage",
+    mediaWebType: "Web and interface",
+    mediaWebTitle: "From interface to working product",
+    mediaWebText: "A brief look at the design and development work behind web experiences.",
+    mediaWebAlt: "Software interface displayed on a computer screen",
+    mediaWebVideoAria: "Illustrative promotional video of a web interface",
+    mediaMobileType: "Mobile and software",
+    mediaMobileTitle: "Usable experiences on every screen",
+    mediaMobileText: "Clear and accessible mobile interfaces designed for real-world use.",
+    mediaMobileAlt: "Software developer using a mobile phone",
+    mediaMobileVideoAria: "Illustrative promotional video of mobile development",
+    mediaDisclosure: "These licensed illustrative clips represent our fields of work; they are not recordings of projects we delivered.",
     servicesEyebrow: "Services",
     servicesTitle: "A clear scope shaped around your needs.",
     servicesIntro: "We simplify the technical detail and define the right solution around your business goal.",
@@ -201,6 +247,8 @@ const copy = {
     finalText: "We will clarify the scope with you and prepare a quote suited to the project.",
     finalWhatsapp: "Get a Quote on WhatsApp",
     footerText: "Website, mobile application and custom software development.",
+    footerWhatsapp: "WhatsApp",
+    footerEmail: "Email",
     stickyWhatsapp: "WhatsApp",
     stickyPhone: "Call",
     mobileContactAria: "Quick contact",
@@ -381,6 +429,78 @@ function initConsent() {
   else if (consentState() !== "denied") showConsent();
 }
 
+function initProjectImageFallbacks() {
+  document.querySelectorAll("[data-project-image]").forEach((image) => {
+    const showFallback = () => image.classList.add("is-broken");
+    image.addEventListener("error", showFallback, { once: true });
+    if (image.complete && image.naturalWidth === 0) showFallback();
+  });
+}
+
+function initVideos() {
+  const videos = [...document.querySelectorAll("[data-video]")];
+  if (!videos.length) return;
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  videos.forEach((video) => {
+    const stage = video.closest("[data-video-stage]");
+    const button = stage?.querySelector("[data-video-play]");
+    const poster = stage?.querySelector("[data-video-poster]");
+    const errorMessage = stage?.querySelector("[data-video-error]");
+    if (!stage || !button || !poster || !errorMessage) return;
+
+    const fail = () => {
+      video.pause();
+      video.removeAttribute("src");
+      video.hidden = true;
+      poster.hidden = false;
+      button.hidden = true;
+      errorMessage.hidden = false;
+      stage.classList.add("has-error");
+    };
+
+    button.addEventListener("click", () => {
+      if (video.src) return;
+      button.disabled = true;
+      const label = button.querySelector("span:last-child");
+      if (label) label.textContent = copy[currentLanguage].mediaLoading;
+      video.src = video.dataset.src;
+      video.load();
+    });
+
+    video.addEventListener("loadeddata", () => {
+      stage.classList.add("is-ready");
+      poster.hidden = true;
+      errorMessage.hidden = true;
+      button.hidden = true;
+      video.hidden = false;
+      button.disabled = false;
+      if (reduceMotion) video.focus();
+      else video.play().catch(() => { /* Native controls remain available. */ });
+    }, { once: true });
+
+    video.addEventListener("error", fail, { once: true });
+    video.addEventListener("play", () => {
+      videos.forEach((otherVideo) => { if (otherVideo !== video) otherVideo.pause(); });
+      if (!video.dataset.analyticsPlayed) {
+        video.dataset.analyticsPlayed = "true";
+        trackEvent("video_engagement", { video_id: video.dataset.videoId, action: "play" });
+      }
+    });
+  });
+
+  const section = document.querySelector(".media-showcase");
+  if (section && "IntersectionObserver" in window) {
+    const observer = new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting) videos.forEach((video) => video.pause());
+    }, { threshold: 0.15 });
+    observer.observe(section);
+  }
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) videos.forEach((video) => video.pause());
+  });
+}
+
 function initInteractionTracking() {
   document.addEventListener("click", (event) => {
     const languageButton = event.target.closest("[data-lang]");
@@ -407,6 +527,8 @@ function init() {
   applyLanguage(copy[storedLanguage] ? storedLanguage : SITE.defaultLanguage);
   document.querySelectorAll("[data-year]").forEach((element) => { element.textContent = new Date().getFullYear(); });
   initNavigation();
+  initProjectImageFallbacks();
+  initVideos();
   initInteractionTracking();
   initConsent();
 }

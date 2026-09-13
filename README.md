@@ -47,6 +47,8 @@ assets/mahsun.webp
 
 Portfolio screenshots in `assets/projects/` are optimized captures of the confirmed public project pages. Project descriptions describe the public products and do not claim responsibility for individual features or results.
 
+Illustrative promotional clips and poster images live in `assets/videos/`. Their item-specific source and licence records are documented in [`docs/media-sources.md`](docs/media-sources.md). Video sources are attached only after a visitor activates playback.
+
 ## Analytics
 
 Analytics is intentionally disabled. Future IDs belong only in `analytics-config.js`; do not add placeholder IDs or direct Google tags. See [`docs/analytics-setup.md`](docs/analytics-setup.md) for the event contract, consent boundary, phase 2 requirements, and verification checklist.
