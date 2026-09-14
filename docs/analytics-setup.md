@@ -1,6 +1,6 @@
 # Analytics and consent setup
 
-Phase 1 prepares an analytics boundary but does not connect to Google. No Google Tag Manager (GTM), Google Analytics 4 (GA4), Google Ads, or Search Console account currently exists, and the repository contains no placeholder measurement ID.
+The site has a real Google Tag Manager (GTM) container ID in its central configuration, but external analytics is not active yet. The required completed privacy information is not present, so the existing configuration gate prevents the consent panel and GTM loader from activating. GA4, Google Ads tags, and campaigns are not installed or published by this repository change.
 
 ## Configuration location
 
@@ -8,7 +8,7 @@ All future browser-side analytics configuration is in `analytics-config.js`:
 
 ```js
 window.ANALYTICS_CONFIG = Object.freeze({
-  gtmContainerId: "",
+  gtmContainerId: "GTM-TS9MQX78",
   privacyPolicyUrl: "",
   consentStorageKey: "am_analytics_consent_v1"
 });
@@ -20,6 +20,8 @@ External analytics stays disabled unless both of these checks pass:
 - `privacyPolicyUrl` is an absolute HTTP(S) URL to completed privacy information.
 
 With either value absent or invalid, the site does not load GTM, does not show a meaningless cookie banner, and does not queue behavioural events for later replay.
+
+Current status: the GTM ID is configured, while `privacyPolicyUrl` remains empty because no completed privacy document exists in the repository. Do not insert a placeholder URL to bypass this gate. Add the approved public privacy URL only after the content is complete.
 
 ## dataLayer event contract
 
@@ -43,6 +45,7 @@ The prepared implementation uses a basic consent approach:
 
 - GTM does not load before an affirmative choice.
 - Consent defaults are queued before the container is loaded, then updated for the granted choice.
+- Accepting analytics grants only `analytics_storage`; `ad_storage`, `ad_user_data`, and `ad_personalization` remain denied.
 - Rejected visitors are not tracked.
 - Pre-consent interactions are discarded rather than replayed after acceptance.
 - The footer preference control lets a visitor reject after previously accepting. The denial update prevents further site events from being pushed.
@@ -61,7 +64,7 @@ Official references:
 The following real, user-owned items are required:
 
 1. A Google account with appropriate business ownership and access.
-2. A GTM web container for `beylikduzuyazilim.com.tr` and its real `GTM-...` container ID.
+2. The configured GTM web container for `beylikduzuyazilim.com.tr` (`GTM-TS9MQX78`).
 3. A GA4 property and web data stream for the canonical HTTPS domain, including the real measurement ID and agreed data-retention, Google Signals, and ads-personalisation settings.
 4. A Google Ads account only if advertising will run, with billing, conversion goals, campaign geography, language, budget, and final URLs reviewed by the owner. No campaign or spend is part of phase 1.
 5. A Search Console domain property verified through a DNS record controlled by the domain owner; then submit `https://beylikduzuyazilim.com.tr/sitemap.xml`.
@@ -70,13 +73,13 @@ The following real, user-owned items are required:
 8. GTM tags, variables, custom-event triggers, consent checks, environments, and publishing access. Preview and approve the container before any production publication.
 9. A measurement plan deciding which click-intent events, if any, become GA4 key events or Google Ads conversions. Confirmed leads require a separate CRM or server-side outcome source.
 
-After those items exist, add only the real GTM container ID and completed privacy URL to `analytics-config.js`. Configure GA4 and Ads inside GTM; do not add a second direct Google tag for the same events.
+The real GTM container ID is already recorded. After the privacy content and consent review are complete, add only the approved privacy URL to `analytics-config.js`. Configure GA4 and Ads inside GTM; do not add a second direct Google tag for the same events.
 
 ## Manual end-to-end verification
 
 Run these checks in a clean browser profile and repeat at 360 px, 768 px, and 1440 px widths:
 
-1. With blank configuration, confirm no consent banner appears and the Network panel has no requests to `googletagmanager.com`, `google-analytics.com`, or Google Ads measurement endpoints.
+1. With the privacy URL blank, confirm no consent banner appears and the Network panel has no requests to `googletagmanager.com`, `google-analytics.com`, or Google Ads measurement endpoints.
 2. Confirm WhatsApp, phone, and email links navigate even when JavaScript or storage access is blocked.
 3. Add a non-production GTM container and a valid test privacy URL. Confirm the preference UI appears before any Google request.
 4. Reject consent. Confirm GTM does not load and contact navigation still works.

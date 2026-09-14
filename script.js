@@ -292,12 +292,12 @@ function consentState() {
   return safeStorageGet(consentKey);
 }
 
-function consentPayload(value) {
+function consentPayload(analyticsValue) {
   return {
-    ad_storage: value,
-    ad_user_data: value,
-    ad_personalization: value,
-    analytics_storage: value
+    ad_storage: "denied",
+    ad_user_data: "denied",
+    ad_personalization: "denied",
+    analytics_storage: analyticsValue
   };
 }
 
@@ -308,10 +308,15 @@ function pushConsent(command, value) {
 }
 
 function loadGtm() {
-  if (!analyticsAvailable || consentState() !== "granted" || analyticsLoaded) return;
+  if (!analyticsAvailable || consentState() !== "granted") return;
+  if (analyticsLoaded) {
+    pushConsent("update", "granted");
+    return;
+  }
   analyticsLoaded = true;
   pushConsent("default", "denied");
   pushConsent("update", "granted");
+  window.dataLayer.push({ "gtm.start": Date.now(), event: "gtm.js" });
   const script = document.createElement("script");
   script.async = true;
   script.id = "google-tag-manager";

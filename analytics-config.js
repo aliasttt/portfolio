@@ -1,10 +1,9 @@
 /*
- * Phase 2 analytics configuration.
- * Keep values empty until the real Google accounts, privacy content, and
- * consent setup described in docs/analytics-setup.md are ready.
+ * Analytics configuration. GTM remains disabled until every activation
+ * prerequisite described in docs/analytics-setup.md is complete.
  */
 window.ANALYTICS_CONFIG = Object.freeze({
-  gtmContainerId: "",
+  gtmContainerId: "GTM-TS9MQX78",
   privacyPolicyUrl: "",
   consentStorageKey: "am_analytics_consent_v1"
 });

@@ -100,6 +100,12 @@ def assert_layout(page, base_url: str, width: int, height: int) -> None:
 
 def main() -> None:
     ARTIFACT_DIR.mkdir(exist_ok=True)
+    html_source = (ROOT / "index.html").read_text(encoding="utf-8")
+    script_source = (ROOT / "script.js").read_text(encoding="utf-8")
+    assert html_source.count('src="analytics-config.js"') == 1
+    assert "googletagmanager.com" not in html_source
+    assert "google-analytics.com" not in html_source
+    assert script_source.count("googletagmanager.com/gtm.js") == 1
     with local_site() as base_url, sync_playwright() as playwright:
         browser = playwright.chromium.launch()
 
@@ -141,6 +147,10 @@ def main() -> None:
             "['tr','en'].every(lang => [...document.querySelectorAll('[data-i18n-alt]')].every(el => typeof copy[lang][el.dataset.i18nAlt] === 'string'))"
         )
         assert page.locator("[data-project-image]").count() == 5
+        assert page.evaluate("window.ANALYTICS_CONFIG.gtmContainerId") == "GTM-TS9MQX78"
+        assert page.evaluate("window.ANALYTICS_CONFIG.privacyPolicyUrl") == ""
+        assert page.locator('head > script[src="analytics-config.js"]').count() == 1
+        assert page.locator('script[src*="googletagmanager.com"]').count() == 0
         assert page.evaluate(
             "[...document.querySelectorAll('.project-media img, .video-stage > img')].every(el => getComputedStyle(el).filter === 'none')"
         )
@@ -230,7 +240,14 @@ def main() -> None:
         touch_context.close()
 
         consent_context = browser.new_context()
+        gtm_requests: list[str] = []
         consent_page = consent_context.new_page()
+        consent_page.on(
+            "request",
+            lambda request: gtm_requests.append(request.url)
+            if "googletagmanager.com/gtm.js" in request.url
+            else None,
+        )
         consent_page.add_init_script(
             "document.addEventListener('click', e => { if (e.target.closest('a')) e.preventDefault(); }, true);"
         )
@@ -239,7 +256,7 @@ def main() -> None:
             lambda route: route.fulfill(
                 content_type="application/javascript",
                 body=(
-                    "window.ANALYTICS_CONFIG={gtmContainerId:'GTM-ABC123',"
+                    "window.ANALYTICS_CONFIG={gtmContainerId:'GTM-TS9MQX78',"
                     "privacyPolicyUrl:'https://example.test/privacy',"
                     "consentStorageKey:'smoke_consent'};"
                 ),
@@ -247,14 +264,37 @@ def main() -> None:
         )
         consent_page.route("https://www.googletagmanager.com/**", lambda route: route.fulfill(body=""))
         consent_page.goto(base_url)
+        assert gtm_requests == []
         assert consent_page.locator("[data-consent]").is_visible()
         assert not consent_page.locator('[data-location="floating_whatsapp"]').is_visible()
         consent_page.locator('[data-location="hero"][data-contact="whatsapp"]').click()
         assert consent_page.evaluate("window.dataLayer") is None
+        consent_page.locator("[data-consent-reject]").click()
+        assert not consent_page.locator("[data-consent]").is_visible()
+        assert consent_page.locator("#google-tag-manager").count() == 0
+        assert gtm_requests == []
+        consent_page.locator('[data-location="hero"][data-contact="phone"]').click()
+        assert consent_page.evaluate("window.dataLayer") is None
+        consent_page.locator("[data-consent-settings]").click()
         consent_page.locator("[data-consent-accept]").click()
+        consent_page.wait_for_timeout(50)
         assert consent_page.locator("#google-tag-manager").count() == 1
+        assert gtm_requests == ["https://www.googletagmanager.com/gtm.js?id=GTM-TS9MQX78"]
         assert consent_page.locator('[data-location="floating_whatsapp"]').is_visible()
-        behavioural = "window.dataLayer.filter(item => item && item.event)"
+        assert consent_page.evaluate("window.dataLayer.slice(0, 3).map(item => item.event || item[1])") == ["default", "update", "gtm.js"]
+        assert consent_page.evaluate("window.dataLayer[0][2]") == {
+            "ad_storage": "denied",
+            "ad_user_data": "denied",
+            "ad_personalization": "denied",
+            "analytics_storage": "denied",
+        }
+        assert consent_page.evaluate("window.dataLayer[1][2]") == {
+            "ad_storage": "denied",
+            "ad_user_data": "denied",
+            "ad_personalization": "denied",
+            "analytics_storage": "granted",
+        }
+        behavioural = "window.dataLayer.filter(item => item && ['contact_click','portfolio_click','service_interest','language_change','video_engagement'].includes(item.event))"
         assert consent_page.evaluate(behavioural) == []
         consent_page.locator('[data-location="floating_whatsapp"]').click()
         events = consent_page.evaluate(behavioural)
@@ -285,9 +325,25 @@ def main() -> None:
         assert not consent_page.locator('[data-location="floating_whatsapp"]').is_visible()
         consent_page.locator("[data-consent-reject]").click()
         assert consent_page.locator('[data-location="floating_whatsapp"]').is_visible()
+        assert consent_page.evaluate("window.dataLayer.filter(item => item && item[0] === 'consent').at(-1)[2]") == {
+            "ad_storage": "denied",
+            "ad_user_data": "denied",
+            "ad_personalization": "denied",
+            "analytics_storage": "denied",
+        }
         before = len(consent_page.evaluate(behavioural))
         consent_page.locator('[data-location="hero"][data-contact="phone"]').click()
         assert len(consent_page.evaluate(behavioural)) == before
+        consent_page.locator("[data-consent-settings]").click()
+        consent_page.locator("[data-consent-accept]").click()
+        assert consent_page.locator("#google-tag-manager").count() == 1
+        assert len(gtm_requests) == 1
+        assert consent_page.evaluate("window.dataLayer.filter(item => item && item[0] === 'consent').at(-1)[2]") == {
+            "ad_storage": "denied",
+            "ad_user_data": "denied",
+            "ad_personalization": "denied",
+            "analytics_storage": "granted",
+        }
         consent_context.close()
 
         browser.close()
