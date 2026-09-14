@@ -38,12 +38,7 @@ GitHub Pages is configured manually from the `main` branch and repository root. 
 
 ## Content and assets
 
-Team images live in:
-
-```text
-assets/ali.webp
-assets/mahsun.webp
-```
+Team cards use compact HTML/CSS initial avatars. No portrait is presented without an authentic portrait asset.
 
 Portfolio screenshots in `assets/projects/` are optimized captures of the confirmed public project pages. Project descriptions describe the public products and do not claim responsibility for individual features or results.
 

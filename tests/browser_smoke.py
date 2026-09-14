@@ -54,6 +54,19 @@ def assert_layout(page, base_url: str, width: int, height: int) -> None:
     assert overflow <= 1, f"horizontal overflow at {width}px: {overflow}px; {offenders}"
     assert page.locator('[data-contact="whatsapp"][data-location="hero"]').is_visible()
     assert page.locator('[data-contact="phone"][data-location="hero"]').is_visible()
+    floating = page.locator('[data-location="floating_whatsapp"]')
+    assert floating.is_visible()
+    assert floating.evaluate("el => getComputedStyle(el).position") == "fixed"
+    floating_box = floating.bounding_box()
+    assert floating_box and floating_box["width"] >= 56 and floating_box["height"] >= 56
+    assert width - (floating_box["x"] + floating_box["width"]) >= 0
+    assert height - (floating_box["y"] + floating_box["height"]) >= 0
+    assert floating.locator("svg").count() == 1
+    floating.focus()
+    assert floating.evaluate("el => getComputedStyle(el).outlineStyle") == "solid"
+    assert page.evaluate(
+        "[...document.querySelectorAll('.person-card')].every(el => el.getBoundingClientRect().height <= 170)"
+    )
     if width <= 720:
         for location in ("hero",):
             for method in ("whatsapp", "phone"):
@@ -62,9 +75,23 @@ def assert_layout(page, base_url: str, width: int, height: int) -> None:
                 ).bounding_box()
                 assert box and box["y"] + box["height"] <= height
         assert page.locator(".mobile-contact").is_visible()
+        mobile_box = page.locator(".mobile-contact").bounding_box()
+        assert mobile_box and floating_box["y"] + floating_box["height"] < mobile_box["y"]
     else:
         assert not page.locator(".mobile-contact").is_visible()
-    if width in (360, 1440):
+    page.evaluate("window.scrollTo(0, document.documentElement.scrollHeight)")
+    page.wait_for_timeout(50)
+    scrolled_box = floating.bounding_box()
+    assert scrolled_box and abs(scrolled_box["x"] - floating_box["x"]) <= 1
+    assert abs(scrolled_box["y"] - floating_box["y"]) <= 1
+    footer_links = page.locator(".footer-nav").bounding_box()
+    assert footer_links and not (
+        scrolled_box["x"] < footer_links["x"] + footer_links["width"]
+        and scrolled_box["x"] + scrolled_box["width"] > footer_links["x"]
+        and scrolled_box["y"] < footer_links["y"] + footer_links["height"]
+        and scrolled_box["y"] + scrolled_box["height"] > footer_links["y"]
+    )
+    if width in (390, 1440):
         page.screenshot(
             path=str(ARTIFACT_DIR / f"landing-{width}.png"),
             full_page=True,
@@ -82,8 +109,9 @@ def main() -> None:
         whatsapp_links = page.locator('[data-contact="whatsapp"]')
         phone_links = page.locator('[data-contact="phone"]')
         email_links = page.locator('[data-contact="email"]')
-        assert whatsapp_links.count() == 8
+        assert whatsapp_links.count() == 9
         assert all(link.get_attribute("href").startswith("https://wa.me/905340382335?text=") for link in whatsapp_links.all())
+        assert page.locator('[data-location="floating_whatsapp"]').get_attribute("aria-label") == "WhatsApp ile iletişime geç"
         assert all(link.get_attribute("href") == "tel:+905340382335" for link in phone_links.all())
         assert all(link.get_attribute("href") == "mailto:aliasadi3853@gmail.com" for link in email_links.all())
         no_js.close()
@@ -94,7 +122,7 @@ def main() -> None:
         page = context.new_page()
         page.on("request", lambda request: google_requests.append(request.url) if "google" in request.url else None)
         page.on("request", lambda request: video_requests.append(request.url) if request.url.endswith(".mp4") else None)
-        for width, height in ((360, 800), (768, 1024), (1440, 1000)):
+        for width, height in ((360, 800), (390, 844), (768, 1024), (1440, 1000)):
             assert_layout(page, base_url, width, height)
         for image in page.locator("img").all():
             image.scroll_into_view_if_needed()
@@ -113,17 +141,33 @@ def main() -> None:
             "['tr','en'].every(lang => [...document.querySelectorAll('[data-i18n-alt]')].every(el => typeof copy[lang][el.dataset.i18nAlt] === 'string'))"
         )
         assert page.locator("[data-project-image]").count() == 5
+        assert page.evaluate(
+            "[...document.querySelectorAll('.project-media img, .video-stage > img')].every(el => getComputedStyle(el).filter === 'none')"
+        )
+        assert page.evaluate(
+            "document.querySelector('#services').compareDocumentPosition(document.querySelector('#experiences')) & Node.DOCUMENT_POSITION_FOLLOWING"
+        )
+        assert page.locator(".person-avatar").count() == 2
+        assert page.evaluate(
+            "[...document.querySelectorAll('.person-avatar')].every(el => Math.abs(el.getBoundingClientRect().width - el.getBoundingClientRect().height) <= 1)"
+        )
         assert video_requests == [], f"video downloaded before playback: {video_requests}"
         assert not page.locator("[data-consent]").is_visible()
         assert google_requests == [], f"unexpected Google request with blank config: {google_requests}"
         page.locator('[data-lang="en"]').click()
         assert page.locator("h1").inner_text() == "We build websites and software for your business."
+        assert page.locator('[data-location="floating_whatsapp"]').get_attribute("aria-label") == "Contact us on WhatsApp"
+        three_a_card = page.locator('.project-card:has(.project-media[data-project="3a-jewellery"])')
+        three_a_type = three_a_card.locator(".project-type").text_content()
+        assert three_a_type == "Product showcase", f"unexpected EN 3A type: {three_a_type!r}"
+        assert "WhatsApp" in three_a_card.locator('[data-i18n="project3a"]').inner_text()
         assert page.evaluate("new URL(document.querySelector('[data-location=hero][data-contact=whatsapp]').href).searchParams.get('text')") == "Hello, I would like to discuss a project and get a quote. My requirements: "
         assert all(link.get_attribute("href").startswith("https://wa.me/905340382335?text=") for link in page.locator('[data-contact="whatsapp"]').all())
         assert all(link.get_attribute("href") == "tel:+905340382335" for link in page.locator('[data-contact="phone"]').all())
         assert all(link.get_attribute("href") == "mailto:aliasadi3853@gmail.com" for link in page.locator('[data-contact="email"]').all())
         page.locator('[data-lang="tr"]').click()
         assert page.locator("h1").inner_text() == "İşletmeniz için web sitesi ve yazılım geliştiriyoruz."
+        assert three_a_card.locator(".project-type").text_content() == "Ürün vitrini"
         assert page.evaluate("new URL(document.querySelector('[data-location=hero][data-contact=whatsapp]').href).searchParams.get('text')") == "Merhaba, bir proje hakkında bilgi ve teklif almak istiyorum. İhtiyacım: "
         assert all(link.get_attribute("href").startswith("https://wa.me/905340382335?text=") for link in page.locator('[data-contact="whatsapp"]').all())
         assert all(link.get_attribute("href") == "tel:+905340382335" for link in page.locator('[data-contact="phone"]').all())
@@ -177,6 +221,14 @@ def main() -> None:
         assert reduced_page.locator("[data-video]").first.evaluate("video => video.paused")
         reduced_context.close()
 
+        touch_context = browser.new_context(viewport={"width": 390, "height": 844}, has_touch=True, is_mobile=True)
+        touch_page = touch_context.new_page()
+        touch_page.goto(base_url, wait_until="networkidle")
+        assert touch_page.evaluate(
+            "[...document.querySelectorAll('.project-media img, .video-stage > img')].every(el => getComputedStyle(el).filter === 'none')"
+        )
+        touch_context.close()
+
         consent_context = browser.new_context()
         consent_page = consent_context.new_page()
         consent_page.add_init_script(
@@ -196,16 +248,26 @@ def main() -> None:
         consent_page.route("https://www.googletagmanager.com/**", lambda route: route.fulfill(body=""))
         consent_page.goto(base_url)
         assert consent_page.locator("[data-consent]").is_visible()
+        assert not consent_page.locator('[data-location="floating_whatsapp"]').is_visible()
         consent_page.locator('[data-location="hero"][data-contact="whatsapp"]').click()
         assert consent_page.evaluate("window.dataLayer") is None
         consent_page.locator("[data-consent-accept]").click()
         assert consent_page.locator("#google-tag-manager").count() == 1
+        assert consent_page.locator('[data-location="floating_whatsapp"]').is_visible()
         behavioural = "window.dataLayer.filter(item => item && item.event)"
         assert consent_page.evaluate(behavioural) == []
+        consent_page.locator('[data-location="floating_whatsapp"]').click()
+        events = consent_page.evaluate(behavioural)
+        assert events == [{
+            "event": "contact_click",
+            "contact_method": "whatsapp",
+            "cta_location": "floating_whatsapp",
+            "language": "tr",
+        }]
         consent_page.locator('[data-location="hero"][data-contact="whatsapp"]').click()
         events = consent_page.evaluate(behavioural)
-        assert [event["event"] for event in events] == ["contact_click"]
-        assert events[0] == {
+        assert [event["event"] for event in events] == ["contact_click", "contact_click"]
+        assert events[1] == {
             "event": "contact_click",
             "contact_method": "whatsapp",
             "cta_location": "hero",
@@ -218,9 +280,11 @@ def main() -> None:
         consent_page.locator('[data-service="web"]').click()
         events = consent_page.evaluate(behavioural)
         assert len([event for event in events if event["event"] == "service_interest"]) == 1
-        assert len([event for event in events if event["event"] == "contact_click"]) == 2
+        assert len([event for event in events if event["event"] == "contact_click"]) == 3
         consent_page.locator("[data-consent-settings]").click()
+        assert not consent_page.locator('[data-location="floating_whatsapp"]').is_visible()
         consent_page.locator("[data-consent-reject]").click()
+        assert consent_page.locator('[data-location="floating_whatsapp"]').is_visible()
         before = len(consent_page.evaluate(behavioural))
         consent_page.locator('[data-location="hero"][data-contact="phone"]').click()
         assert len(consent_page.evaluate(behavioural)) == before
@@ -229,9 +293,9 @@ def main() -> None:
         browser.close()
         print(json.dumps({
             "status": "ok",
-            "widths": [360, 768, 1440],
+            "widths": [360, 390, 768, 1440],
             "analytics": "consent-gated",
-            "previews": [str(ARTIFACT_DIR / "landing-360.png"), str(ARTIFACT_DIR / "landing-1440.png")],
+            "previews": [str(ARTIFACT_DIR / "landing-390.png"), str(ARTIFACT_DIR / "landing-1440.png")],
         }))
 
 

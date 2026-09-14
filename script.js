@@ -44,10 +44,11 @@ const copy = {
     projectsIntro: "Her kart sizi doğrudan projenin canlı web sitesine götürür.",
     projectWebPlatform: "Web platformu",
     projectEcommerce: "E-ticaret",
+    projectShowcase: "Ürün vitrini",
     projectWebApp: "Web ve mobil ürün",
     projectZamok: "BIM modellerini ve çizimleri tarayıcıda görüntüleme, doküman ve saha süreçlerini yönetme platformu.",
     projectFirmen: "Kişiselleştirilebilir tekstil ürünlerini tasarlama ve satın alma akışında sunan e-ticaret sitesi.",
-    project3a: "Mücevher koleksiyonlarını ve ürün keşfini öne çıkaran çevrim içi mağaza deneyimi.",
+    project3a: "Mücevher koleksiyonlarını ve ürünleri sergileyen, WhatsApp üzerinden bilgi alma imkânı sunan bir vitrin.",
     projectBonus: "QR menü ve sadakat puanlarını işletme paneli ve müşteri deneyimiyle bir araya getiren platform.",
     projectPreis: "Dijital menü, çevrim içi sipariş ve çok dilli menü yönetimi sunan restoran platformu.",
     imageFallback: "Proje görseli yüklenemedi",
@@ -125,6 +126,7 @@ const copy = {
     stickyWhatsapp: "WhatsApp",
     stickyPhone: "Ara",
     mobileContactAria: "Hızlı iletişim",
+    floatingWhatsappAria: "WhatsApp ile iletişime geç",
     consentSettings: "Çerez tercihleri",
     consentTitle: "Analitik tercihiniz",
     consentText: "İzin verirseniz, site kullanımını anlamak için isteğe bağlı analitik araçları kullanırız. Reddetmeniz iletişim bağlantılarını etkilemez.",
@@ -171,10 +173,11 @@ const copy = {
     projectsIntro: "Each card links directly to the project's live website.",
     projectWebPlatform: "Web platform",
     projectEcommerce: "E-commerce",
+    projectShowcase: "Product showcase",
     projectWebApp: "Web and mobile product",
     projectZamok: "A platform for viewing BIM models and drawings in the browser and managing document and site workflows.",
     projectFirmen: "An e-commerce site for designing and buying custom-printed textile products.",
-    project3a: "An online store experience focused on jewellery collections and product discovery.",
+    project3a: "A showcase for jewellery collections and products, with enquiries handled through WhatsApp.",
     projectBonus: "A platform combining QR menus and loyalty points with a business dashboard and customer experience.",
     projectPreis: "A restaurant platform for digital menus, online ordering and multilingual menu management.",
     imageFallback: "Project image could not be loaded",
@@ -252,6 +255,7 @@ const copy = {
     stickyWhatsapp: "WhatsApp",
     stickyPhone: "Call",
     mobileContactAria: "Quick contact",
+    floatingWhatsappAria: "Contact us on WhatsApp",
     consentSettings: "Cookie preferences",
     consentTitle: "Your analytics preference",
     consentText: "With your permission, we use optional analytics to understand site usage. Rejecting does not affect contact links.",
@@ -400,12 +404,14 @@ function showConsent() {
   const panel = document.querySelector("[data-consent]");
   if (!analyticsAvailable || !panel) return;
   panel.hidden = false;
+  document.documentElement.classList.add("has-open-consent");
   panel.querySelector("button")?.focus();
 }
 
 function hideConsent() {
   const panel = document.querySelector("[data-consent]");
   if (panel) panel.hidden = true;
+  document.documentElement.classList.remove("has-open-consent");
 }
 
 function initConsent() {
