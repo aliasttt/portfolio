@@ -105,6 +105,7 @@ def main() -> None:
     assert html_source.count('src="analytics-config.js"') == 1
     assert "googletagmanager.com" not in html_source
     assert "google-analytics.com" not in html_source
+    assert "googletagmanager.com/gtag/js" not in script_source
     assert script_source.count("googletagmanager.com/gtm.js") == 1
     with local_site() as base_url, sync_playwright() as playwright:
         browser = playwright.chromium.launch()
@@ -148,6 +149,7 @@ def main() -> None:
         )
         assert page.locator("[data-project-image]").count() == 5
         assert page.evaluate("window.ANALYTICS_CONFIG.gtmContainerId") == "GTM-TS9MQX78"
+        assert page.evaluate("window.ANALYTICS_CONFIG.ga4MeasurementId") == "G-H5N8JSM0SS"
         assert page.evaluate("window.ANALYTICS_CONFIG.privacyPolicyUrl") == ""
         assert page.locator('head > script[src="analytics-config.js"]').count() == 1
         assert page.locator('script[src*="googletagmanager.com"]').count() == 0

@@ -4,6 +4,8 @@
  */
 window.ANALYTICS_CONFIG = Object.freeze({
   gtmContainerId: "GTM-TS9MQX78",
+  // Reference value for GTM setup; the site never loads gtag.js directly.
+  ga4MeasurementId: "G-H5N8JSM0SS",
   privacyPolicyUrl: "",
   consentStorageKey: "am_analytics_consent_v1"
 });

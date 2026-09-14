@@ -46,4 +46,4 @@ Illustrative promotional clips and poster images live in `assets/videos/`. Their
 
 ## Analytics
 
-Analytics is intentionally disabled. Future IDs belong only in `analytics-config.js`; do not add placeholder IDs or direct Google tags. See [`docs/analytics-setup.md`](docs/analytics-setup.md) for the event contract, consent boundary, phase 2 requirements, and verification checklist.
+Analytics is intentionally inactive while the required privacy-policy URL is absent. The confirmed GTM container and GA4 Measurement ID are recorded in `analytics-config.js`, but the GA4 ID is reference-only: GA4 must be configured and later published inside GTM. Do not add a standalone `gtag.js` installation. See [`docs/analytics-setup.md`](docs/analytics-setup.md) for the exact event contract, GTM build sheet, consent boundary, activation requirements, and verification checklist.
