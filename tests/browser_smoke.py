@@ -101,9 +101,12 @@ def assert_layout(page, base_url: str, width: int, height: int) -> None:
 def main() -> None:
     ARTIFACT_DIR.mkdir(exist_ok=True)
     html_source = (ROOT / "index.html").read_text(encoding="utf-8")
+    privacy_source = (ROOT / "privacy.html").read_text(encoding="utf-8")
     script_source = (ROOT / "script.js").read_text(encoding="utf-8")
     assert html_source.count('src="analytics-config.js"') == 1
+    assert privacy_source.count('src="analytics-config.js"') == 1
     assert "googletagmanager.com" not in html_source
+    assert "googletagmanager.com" not in privacy_source
     assert "google-analytics.com" not in html_source
     assert "googletagmanager.com/gtag/js" not in script_source
     assert script_source.count("googletagmanager.com/gtm.js") == 1
@@ -127,6 +130,7 @@ def main() -> None:
         no_js.close()
 
         context = browser.new_context()
+        context.add_init_script("localStorage.setItem('am_analytics_consent_v1', 'denied')")
         google_requests: list[str] = []
         video_requests: list[str] = []
         page = context.new_page()
@@ -153,7 +157,7 @@ def main() -> None:
         assert page.locator("[data-project-image]").count() == 5
         assert page.evaluate("window.ANALYTICS_CONFIG.gtmContainerId") == "GTM-TS9MQX78"
         assert page.evaluate("window.ANALYTICS_CONFIG.ga4MeasurementId") == "G-H5N8JSM0SS"
-        assert page.evaluate("window.ANALYTICS_CONFIG.privacyPolicyUrl") == ""
+        assert page.evaluate("window.ANALYTICS_CONFIG.privacyPolicyUrl") == "https://beylikduzuyazilim.com.tr/privacy.html"
         assert page.locator('head > script[src="analytics-config.js"]').count() == 1
         assert page.locator('script[src*="googletagmanager.com"]').count() == 0
         assert page.evaluate(
@@ -168,7 +172,8 @@ def main() -> None:
         )
         assert video_requests == [], f"video downloaded before playback: {video_requests}"
         assert not page.locator("[data-consent]").is_visible()
-        assert google_requests == [], f"unexpected Google request with blank config: {google_requests}"
+        assert page.locator('[data-privacy-link][href="https://beylikduzuyazilim.com.tr/privacy.html"]').count() >= 1
+        assert google_requests == [], f"unexpected Google request with denied consent: {google_requests}"
         page.locator('[data-lang="en"]').click()
         assert page.locator("h1").inner_text() == "We build websites and software for your business."
         assert page.locator('[data-location="floating_whatsapp"]').get_attribute("aria-label") == "Contact us on WhatsApp"
@@ -213,6 +218,27 @@ def main() -> None:
         page.locator("#top").scroll_into_view_if_needed()
         page.wait_for_function("video => video.paused", arg=videos.nth(1).element_handle())
         context.close()
+
+        privacy_context = browser.new_context()
+        privacy_context.add_init_script("localStorage.setItem('am_analytics_consent_v1', 'denied')")
+        privacy_page = privacy_context.new_page()
+        privacy_requests: list[str] = []
+        privacy_page.on("request", lambda request: privacy_requests.append(request.url) if "google" in request.url else None)
+        for width in (360, 1440):
+            privacy_page.set_viewport_size({"width": width, "height": 900})
+            privacy_page.goto(f"{base_url}/privacy.html", wait_until="networkidle")
+            assert privacy_page.evaluate("document.documentElement.scrollWidth - document.documentElement.clientWidth") <= 1
+            assert privacy_page.locator('[data-language-content="tr"]').is_visible()
+            assert not privacy_page.locator('[data-language-content="en"]').is_visible()
+            assert privacy_page.locator("[data-consent-settings]").is_visible()
+            privacy_page.screenshot(path=str(ARTIFACT_DIR / f"privacy-{width}.png"), full_page=True)
+        privacy_page.locator('[data-lang="en"]').click()
+        assert privacy_page.locator('[data-language-content="en"]').is_visible()
+        assert not privacy_page.locator('[data-language-content="tr"]').is_visible()
+        assert privacy_page.title() == "Privacy and Analytics Preferences | A&M Software"
+        assert privacy_page.locator('a[href="index.html"]').count() >= 1
+        assert privacy_requests == []
+        privacy_context.close()
 
         failure_context = browser.new_context()
         failure_page = failure_context.new_page()
@@ -262,7 +288,7 @@ def main() -> None:
                 content_type="application/javascript",
                 body=(
                     "window.ANALYTICS_CONFIG={gtmContainerId:'GTM-TS9MQX78',"
-                    "privacyPolicyUrl:'https://example.test/privacy',"
+                    "privacyPolicyUrl:'https://beylikduzuyazilim.com.tr/privacy.html',"
                     "consentStorageKey:'smoke_consent'};"
                 ),
             ),
@@ -272,9 +298,17 @@ def main() -> None:
         assert gtm_requests == []
         assert consent_page.locator("[data-consent]").is_visible()
         assert not consent_page.locator('[data-location="floating_whatsapp"]').is_visible()
+        consent_page.set_viewport_size({"width": 390, "height": 844})
+        consent_page.screenshot(path=str(ARTIFACT_DIR / "consent-390.png"))
+        consent_page.set_viewport_size({"width": 1280, "height": 720})
         consent_page.locator('[data-location="hero"][data-contact="whatsapp"]').click()
         assert consent_page.evaluate("window.dataLayer") is None
         consent_page.locator("[data-consent-reject]").click()
+        assert not consent_page.locator("[data-consent]").is_visible()
+        assert consent_page.locator("#google-tag-manager").count() == 0
+        assert gtm_requests == []
+        assert consent_page.evaluate("localStorage.getItem('smoke_consent')") == "denied"
+        consent_page.reload(wait_until="domcontentloaded")
         assert not consent_page.locator("[data-consent]").is_visible()
         assert consent_page.locator("#google-tag-manager").count() == 0
         assert gtm_requests == []
@@ -326,30 +360,67 @@ def main() -> None:
         events = consent_page.evaluate(behavioural)
         assert len([event for event in events if event["event"] == "service_interest"]) == 1
         assert len([event for event in events if event["event"] == "contact_click"]) == 3
+        consent_page.evaluate(
+            """() => {
+              document.cookie = '_ga=test-client; Path=/; SameSite=Lax';
+              document.cookie = '_ga_GH5N8JSM0SS=test-session; Path=/; SameSite=Lax';
+              document.cookie = 'site_preference=keep; Path=/; SameSite=Lax';
+            }"""
+        )
         consent_page.locator("[data-consent-settings]").click()
         assert not consent_page.locator('[data-location="floating_whatsapp"]').is_visible()
-        consent_page.locator("[data-consent-reject]").click()
+        with consent_page.expect_navigation(wait_until="domcontentloaded"):
+            consent_page.locator("[data-consent-reject]").click()
         assert consent_page.locator('[data-location="floating_whatsapp"]').is_visible()
-        assert consent_page.evaluate("window.dataLayer.filter(item => item && item[0] === 'consent').at(-1)[2]") == {
-            "ad_storage": "denied",
-            "ad_user_data": "denied",
-            "ad_personalization": "denied",
-            "analytics_storage": "denied",
-        }
-        before = len(consent_page.evaluate(behavioural))
+        assert consent_page.locator("#google-tag-manager").count() == 0
+        assert consent_page.evaluate("window.dataLayer") is None
+        assert consent_page.evaluate("localStorage.getItem('smoke_consent')") == "denied"
+        assert consent_page.evaluate("document.cookie.includes('_ga')") is False
+        assert consent_page.evaluate("document.cookie.includes('site_preference=keep')") is True
+        assert len(gtm_requests) == 1
         consent_page.locator('[data-location="hero"][data-contact="phone"]').click()
-        assert len(consent_page.evaluate(behavioural)) == before
+        assert consent_page.evaluate("window.dataLayer") is None
         consent_page.locator("[data-consent-settings]").click()
         consent_page.locator("[data-consent-accept]").click()
         assert consent_page.locator("#google-tag-manager").count() == 1
-        assert len(gtm_requests) == 1
-        assert consent_page.evaluate("window.dataLayer.filter(item => item && item[0] === 'consent').at(-1)[2]") == {
+        assert len(gtm_requests) == 2
+        assert consent_page.evaluate("window.dataLayer.slice(0, 3).map(item => item.event || item[1])") == ["default", "update", "gtm.js"]
+        assert consent_page.evaluate("window.dataLayer[1][2]") == {
             "ad_storage": "denied",
             "ad_user_data": "denied",
             "ad_personalization": "denied",
             "analytics_storage": "granted",
         }
         consent_context.close()
+
+        blocked_context = browser.new_context()
+        blocked_page = blocked_context.new_page()
+        blocked_errors: list[str] = []
+        blocked_requests: list[str] = []
+        blocked_page.on("pageerror", lambda error: blocked_errors.append(str(error)))
+        blocked_page.on(
+            "request",
+            lambda request: blocked_requests.append(request.url)
+            if "googletagmanager.com/gtm.js" in request.url
+            else None,
+        )
+        blocked_page.add_init_script(
+            """Storage.prototype.getItem = function () { throw new Error('storage blocked'); };
+            Storage.prototype.setItem = function () { throw new Error('storage blocked'); };
+            document.addEventListener('click', event => {
+              if (event.target.closest('a')) event.preventDefault();
+            }, true);"""
+        )
+        blocked_page.route("https://www.googletagmanager.com/**", lambda route: route.fulfill(body=""))
+        blocked_page.goto(base_url)
+        assert blocked_page.locator("[data-consent]").is_visible()
+        blocked_page.locator('[data-location="hero"][data-contact="whatsapp"]').click()
+        assert blocked_requests == []
+        blocked_page.locator("[data-consent-accept]").click()
+        assert blocked_page.locator("#google-tag-manager").count() == 1
+        assert blocked_requests == ["https://www.googletagmanager.com/gtm.js?id=GTM-TS9MQX78"]
+        assert blocked_errors == []
+        blocked_context.close()
 
         browser.close()
         print(json.dumps({

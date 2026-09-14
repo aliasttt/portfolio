@@ -227,6 +227,22 @@ p { color: var(--muted); }
 .footer-nav { display: flex; flex-wrap: wrap; gap: 18px; color: var(--muted); font-size: 13px; }
 .footer-nav button { margin: 0; padding: 0; border: 0; background: none; cursor: pointer; }
 
+.privacy-nav-actions { display: flex; align-items: center; gap: 24px; }
+.privacy-main { padding: 72px 0 96px; }
+.privacy-document { max-width: 860px; }
+.privacy-hero { padding-bottom: 54px; border-bottom: 1px solid var(--line); }
+.privacy-hero h1 { max-width: 780px; margin-bottom: 22px; font-size: clamp(44px, 7vw, 78px); }
+.privacy-lead { max-width: 760px; font-size: 19px; }
+.privacy-updated { margin: 26px 0 0; color: var(--dim); font-size: 13px; }
+.privacy-document section { padding: 42px 0; border-bottom: 1px solid var(--line); }
+.privacy-document section h2 { margin-bottom: 18px; font-size: clamp(25px, 4vw, 34px); }
+.privacy-document section p { max-width: 780px; }
+.privacy-document section p:last-child { margin-bottom: 0; }
+.privacy-document ul { max-width: 780px; margin: 18px 0 0; padding-left: 22px; color: var(--muted); }
+.privacy-document li + li { margin-top: 9px; }
+.privacy-document a { color: #8ce8aa; text-decoration: underline; text-underline-offset: 3px; }
+.privacy-document code { padding: 2px 5px; border: 1px solid var(--line); background: var(--surface); color: var(--white); }
+
 .mobile-contact { display: none; }
 .button[data-contact="whatsapp"],
 .final-contact .button[data-contact="whatsapp"] { background: var(--whatsapp); border-color: var(--whatsapp); color: #031307; }
@@ -277,6 +293,8 @@ html.has-open-consent .floating-whatsapp { display: none; }
 .consent a { font-size: 13px; text-decoration: underline; }
 .consent-actions { display: flex; gap: 8px; }
 .consent .button { min-height: 44px; padding: 10px 16px; }
+.consent .consent-choice { border: 1px solid #777; background: transparent; color: var(--white); }
+.consent .consent-choice:hover { border-color: var(--white); background: var(--white); color: var(--black); }
 
 @media (max-width: 980px) {
   .nav-toggle { display: block; }
@@ -336,6 +354,14 @@ html.has-open-consent .floating-whatsapp { display: none; }
   .final-contact { padding: 76px 0; }
   .final-grid h2 { font-size: 45px; }
   .footer-grid { grid-template-columns: 1fr; gap: 25px; }
+  .privacy-page { padding-bottom: 0; }
+  .privacy-nav-actions { gap: 12px; }
+  .privacy-nav-actions .text-link { font-size: 13px; }
+  .privacy-main { padding: 42px 0 72px; }
+  .privacy-hero { padding-bottom: 38px; }
+  .privacy-hero h1 { font-size: clamp(38px, 11vw, 52px); }
+  .privacy-lead { font-size: 17px; }
+  .privacy-document section { padding: 34px 0; }
   .mobile-contact {
     position: fixed;
     left: 0;
@@ -361,6 +387,7 @@ html.has-open-consent .floating-whatsapp { display: none; }
   .person-card { align-items: start; }
   .consent { left: 10px; right: 10px; padding: 17px; }
   .consent-actions { display: grid; grid-template-columns: 1fr 1fr; }
+  .privacy-page .brand > span:last-child { display: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {

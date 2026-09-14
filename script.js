@@ -123,6 +123,7 @@ const copy = {
     footerText: "Web sitesi, mobil uygulama ve özel yazılım geliştirme.",
     footerWhatsapp: "WhatsApp",
     footerEmail: "E-posta",
+    footerPrivacy: "Gizlilik bilgisi",
     stickyWhatsapp: "WhatsApp",
     stickyPhone: "Ara",
     mobileContactAria: "Hızlı iletişim",
@@ -130,9 +131,14 @@ const copy = {
     consentSettings: "Çerez tercihleri",
     consentTitle: "Analitik tercihiniz",
     consentText: "İzin verirseniz, site kullanımını anlamak için isteğe bağlı analitik araçları kullanırız. Reddetmeniz iletişim bağlantılarını etkilemez.",
-    consentPrivacy: "Gizlilik bilgisini okuyun",
+    consentPrivacy: "Gizlilik bilgisi",
     consentReject: "Reddet",
-    consentAccept: "Kabul et",
+    consentAccept: "Analitiği kabul et",
+    privacyDocumentTitle: "Gizlilik ve Analitik Tercihleri | A&M Software",
+    privacyMetaDescription: "A&M Software web sitesinin barındırma, analitik, çerez ve gizlilik uygulamaları hakkında Türkçe ve İngilizce bilgi.",
+    privacyOgDescription: "Web sitesinin barındırma, analitik, çerez ve gizlilik uygulamaları.",
+    privacyBackHome: "Ana sayfaya dön",
+    privacyLanguageAria: "Gizlilik bilgisi dili",
     whatsappMessage: "Merhaba, bir proje hakkında bilgi ve teklif almak istiyorum. İhtiyacım: "
   },
   en: {
@@ -252,6 +258,7 @@ const copy = {
     footerText: "Website, mobile application and custom software development.",
     footerWhatsapp: "WhatsApp",
     footerEmail: "Email",
+    footerPrivacy: "Privacy information",
     stickyWhatsapp: "WhatsApp",
     stickyPhone: "Call",
     mobileContactAria: "Quick contact",
@@ -259,9 +266,14 @@ const copy = {
     consentSettings: "Cookie preferences",
     consentTitle: "Your analytics preference",
     consentText: "With your permission, we use optional analytics to understand site usage. Rejecting does not affect contact links.",
-    consentPrivacy: "Read the privacy information",
+    consentPrivacy: "Privacy information",
     consentReject: "Reject",
-    consentAccept: "Accept",
+    consentAccept: "Accept analytics",
+    privacyDocumentTitle: "Privacy and Analytics Preferences | A&M Software",
+    privacyMetaDescription: "Turkish and English information about hosting, analytics, cookies and privacy practices on the A&M Software website.",
+    privacyOgDescription: "Hosting, analytics, cookie and privacy practices for this website.",
+    privacyBackHome: "Back to home",
+    privacyLanguageAria: "Privacy information language",
     whatsappMessage: "Hello, I would like to discuss a project and get a quote. My requirements: "
   }
 };
@@ -279,17 +291,29 @@ const analyticsAvailable = validGtmId && validPrivacyUrl;
 const consentKey = analyticsConfig.consentStorageKey || "am_analytics_consent_v1";
 let currentLanguage = SITE.defaultLanguage;
 let analyticsLoaded = false;
+let volatileConsent = null;
+let consentReturnFocus = null;
 
 function safeStorageGet(key) {
   try { return window.localStorage.getItem(key); } catch (_error) { return null; }
 }
 
 function safeStorageSet(key, value) {
-  try { window.localStorage.setItem(key, value); } catch (_error) { /* Storage is optional. */ }
+  try {
+    window.localStorage.setItem(key, value);
+    return true;
+  } catch (_error) {
+    return false;
+  }
 }
 
 function consentState() {
-  return safeStorageGet(consentKey);
+  return safeStorageGet(consentKey) || volatileConsent;
+}
+
+function setConsentState(value) {
+  volatileConsent = value;
+  safeStorageSet(consentKey, value);
 }
 
 function consentPayload(analyticsValue) {
@@ -309,7 +333,7 @@ function pushConsent(command, value) {
 
 function loadGtm() {
   if (!analyticsAvailable || consentState() !== "granted") return;
-  if (analyticsLoaded) {
+  if (analyticsLoaded || document.getElementById("google-tag-manager")) {
     pushConsent("update", "granted");
     return;
   }
@@ -346,13 +370,17 @@ function applyLanguage(language, shouldTrack = false) {
   currentLanguage = language;
   const dictionary = copy[language];
   document.documentElement.lang = language;
-  document.title = dictionary.documentTitle;
-  setMeta('meta[name="description"]', dictionary.metaDescription);
+  const isPrivacyPage = document.documentElement.dataset.page === "privacy";
+  const title = isPrivacyPage ? dictionary.privacyDocumentTitle : dictionary.documentTitle;
+  const description = isPrivacyPage ? dictionary.privacyMetaDescription : dictionary.metaDescription;
+  const socialDescription = isPrivacyPage ? dictionary.privacyOgDescription : dictionary.ogDescription;
+  document.title = title;
+  setMeta('meta[name="description"]', description);
   setMeta('meta[property="og:locale"]', language === "tr" ? "tr_TR" : "en_US");
-  setMeta('meta[property="og:title"]', dictionary.documentTitle);
-  setMeta('meta[property="og:description"]', dictionary.ogDescription);
-  setMeta('meta[name="twitter:title"]', dictionary.documentTitle);
-  setMeta('meta[name="twitter:description"]', dictionary.ogDescription);
+  setMeta('meta[property="og:title"]', title);
+  setMeta('meta[property="og:description"]', socialDescription);
+  setMeta('meta[name="twitter:title"]', title);
+  setMeta('meta[name="twitter:description"]', socialDescription);
 
   document.querySelectorAll("[data-i18n]").forEach((element) => {
     const value = dictionary[element.dataset.i18n];
@@ -368,6 +396,9 @@ function applyLanguage(language, shouldTrack = false) {
   });
   document.querySelectorAll("[data-lang]").forEach((button) => {
     button.setAttribute("aria-pressed", String(button.dataset.lang === language));
+  });
+  document.querySelectorAll("[data-language-content]").forEach((section) => {
+    section.hidden = section.dataset.languageContent !== language;
   });
   document.querySelectorAll('[data-contact="whatsapp"]').forEach((link) => { link.href = whatsappUrl(language); });
   document.querySelectorAll('[data-contact="phone"]').forEach((link) => { link.href = SITE.phoneUrl; });
@@ -408,6 +439,7 @@ function initNavigation() {
 function showConsent() {
   const panel = document.querySelector("[data-consent]");
   if (!analyticsAvailable || !panel) return;
+  consentReturnFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
   panel.hidden = false;
   document.documentElement.classList.add("has-open-consent");
   panel.querySelector("button")?.focus();
@@ -417,24 +449,63 @@ function hideConsent() {
   const panel = document.querySelector("[data-consent]");
   if (panel) panel.hidden = true;
   document.documentElement.classList.remove("has-open-consent");
+  if (consentReturnFocus && document.contains(consentReturnFocus)) consentReturnFocus.focus();
+  consentReturnFocus = null;
+}
+
+function analyticsCookiePaths() {
+  const parts = window.location.pathname.split("/").filter(Boolean);
+  const paths = ["/"];
+  let path = "";
+  parts.slice(0, -1).forEach((part) => {
+    path += `/${part}`;
+    paths.push(`${path}/`);
+  });
+  return [...new Set(paths)];
+}
+
+function removeAccessibleAnalyticsCookies() {
+  const names = document.cookie
+    .split(";")
+    .map((cookie) => cookie.split("=")[0].trim())
+    .filter((name) => name === "_ga" || name.startsWith("_ga_"));
+  const domains = ["", window.location.hostname, `.${window.location.hostname}`];
+  names.forEach((name) => {
+    analyticsCookiePaths().forEach((path) => {
+      domains.forEach((domain) => {
+        const domainAttribute = domain ? `; Domain=${domain}` : "";
+        document.cookie = `${name}=; Max-Age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT; Path=${path}${domainAttribute}; SameSite=Lax`;
+      });
+    });
+  });
 }
 
 function initConsent() {
   const settings = document.querySelector("[data-consent-settings]");
-  const privacyLink = document.querySelector("[data-privacy-link]");
   if (!analyticsAvailable) return;
   if (settings) settings.hidden = false;
-  if (privacyLink) privacyLink.href = analyticsConfig.privacyPolicyUrl;
+  document.querySelectorAll("[data-privacy-link]").forEach((link) => {
+    link.href = analyticsConfig.privacyPolicyUrl;
+  });
   settings?.addEventListener("click", showConsent);
   document.querySelector("[data-consent-accept]")?.addEventListener("click", () => {
-    safeStorageSet(consentKey, "granted");
+    setConsentState("granted");
     hideConsent();
     loadGtm();
   });
   document.querySelector("[data-consent-reject]")?.addEventListener("click", () => {
-    safeStorageSet(consentKey, "denied");
-    if (analyticsLoaded) pushConsent("update", "denied");
+    setConsentState("denied");
+    if (analyticsLoaded) {
+      analyticsLoaded = false;
+      pushConsent("update", "denied");
+      removeAccessibleAnalyticsCookies();
+      window.location.reload();
+      return;
+    }
     hideConsent();
+  });
+  document.querySelector("[data-consent]")?.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && consentState() !== null) hideConsent();
   });
   if (consentState() === "granted") loadGtm();
   else if (consentState() !== "denied") showConsent();

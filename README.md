@@ -22,7 +22,7 @@ With the Playwright Python package and Chromium installed:
 python tests/browser_smoke.py
 ```
 
-The smoke test covers 360 px, 768 px, and 1440 px layouts; no-JavaScript contact links; TR/EN switching; local image loading; safe outbound links; analytics-disabled network behavior; consent gating; event duplication; and withdrawal.
+The smoke test covers 360 px, 768 px, and 1440 px layouts; the bilingual privacy page; no-JavaScript contact links; local image loading; safe outbound links; analytics-disabled network behavior; consent ordering; event duplication; persistence; cookie cleanup; withdrawal/reload; and re-acceptance.
 
 ## GitHub Pages Deployment
 
@@ -46,4 +46,4 @@ Illustrative promotional clips and poster images live in `assets/videos/`. Their
 
 ## Analytics
 
-Analytics is intentionally inactive while the required privacy-policy URL is absent. The confirmed GTM container and GA4 Measurement ID are recorded in `analytics-config.js`, but the GA4 ID is reference-only: GA4 must be configured and later published inside GTM. Do not add a standalone `gtag.js` installation. See [`docs/analytics-setup.md`](docs/analytics-setup.md) for the exact event contract, GTM build sheet, consent boundary, activation requirements, and verification checklist.
+Analytics uses a basic-consent implementation. The site loads GTM only after an affirmative analytics choice; denial and withdrawal leave Google measurement fully unloaded after a controlled reload. The confirmed GTM container and GA4 Measurement ID are recorded in `analytics-config.js`, but the GA4 ID is reference-only: GA4 must be configured, previewed and published inside GTM. Do not add a standalone `gtag.js` installation. See [`privacy.html`](privacy.html) and [`docs/analytics-setup.md`](docs/analytics-setup.md) for the public notice, exact event contract, consent boundary and remaining GTM steps.
