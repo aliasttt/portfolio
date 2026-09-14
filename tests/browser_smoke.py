@@ -107,6 +107,9 @@ def main() -> None:
     assert "google-analytics.com" not in html_source
     assert "googletagmanager.com/gtag/js" not in script_source
     assert script_source.count("googletagmanager.com/gtm.js") == 1
+    assert 'window.gtag("config"' not in script_source
+    assert 'window.gtag("event"' not in script_source
+    assert 'event: "page_view"' not in script_source
     with local_site() as base_url, sync_playwright() as playwright:
         browser = playwright.chromium.launch()
 
